@@ -11,12 +11,14 @@ const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   const { firstName, lastName, email, mobileNo, dob, password } = req.body;
+
   const sql = `INSERT INTO users(firstName,lastName,email,mobile,birth,password) VALUES(?,?,?,?,?,?)`;
   try {
     const hashpassword = await bcrypt.hash(password, config.saltRounds);
     pool.query(
       sql,
       [firstName, lastName, email, mobileNo, dob, hashpassword],
+
       (error, data) => {
         res.send(result.createResult(error, data));
       }
