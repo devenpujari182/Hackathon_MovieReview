@@ -35,17 +35,20 @@ const onSignUp=async()=>{
     } else if (password != confirmPassword) {
       toast.warning('password does not match')
     } else {
+      console.log(mobileNo)
+      console.log(dob)
       const response = await signup(
         firstName,
         lastName,
         email,
         mobileNo,
         dob,
-        password,
+        password
         
       )
+      console.log(response)
       if (response['status'] === 'success') {
-        toast.success('Successfully registered user')
+        toast.success('Successfully signed up!!')
 
         // go to the Login page
         navigate('/')
@@ -122,7 +125,7 @@ const onSignUp=async()=>{
             </div>
 
             <div>
-            Already have an account? <Link to='/'>signUp here</Link>
+            Already have an account? <Link to='/'>signIn here</Link>
             </div>
             <div>
             <button

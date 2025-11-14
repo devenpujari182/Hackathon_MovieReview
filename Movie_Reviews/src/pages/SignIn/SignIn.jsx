@@ -29,7 +29,7 @@ function SignIn() {
         localStorage.setItem('lastName', response['data']['lastName'])
 
         // navigate to the PropertyListing page
-        navigate('properties')
+        navigate('movies')
       } else {
         toast.error(response['error'])
       }
