@@ -3,8 +3,8 @@ create table users(
     firstName varchar(20),
     lastName varchar(20),
     email varchar(50) unique not null,
-    mobile varchar(10),
-    birth date,
+    mobile varchar(10) not null,
+    birth date not null,
     password varchar(100)
 );
 

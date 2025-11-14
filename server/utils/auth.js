@@ -17,7 +17,7 @@ function myAuth(req, res, next) {
         //get the payload out of the fetched token
         const payload = jwt.verify(token, config.secret);
         // add the user data in the request object for the further routes
-        req.user_id = payload.user_id;
+        req.uid = payload.uid;
         next();
       } catch (error) {
         res.send(result.createResult("Token is invalid"));

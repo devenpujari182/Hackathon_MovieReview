@@ -48,19 +48,19 @@ return(
     <div className='container'>
         <h2 className='page-header'>Edit Profile</h2>
         <div className='editProfile-container'>
-            <div class="row g-3" >
-                <div class="col-md-6">
-					<label class="form-label">First Name</label>
+            <div className="row g-3" >
+                <div className="col-md-6">
+					<label className="form-label">First Name</label>
 					<input 
                     onChange={(e)=>setFirstName(e.target.value)}
-                    type="text" class="form-control" placeholder="" aria-label="First name" value="Scaralet"/>
+                    type="text" className="form-control" placeholder="" aria-label="First name" />
 				</div>
 				
-				<div class="col-md-6">
-					<label class="form-label">Last Name</label>
+				<div className="col-md-6">
+					<label className="form-label">Last Name</label>
 					<input
                     onChange={(e)=>setLastName(e.target.value)}
-                    type="text" class="form-control" placeholder="" aria-label="Last name" value="Doe"/>
+                    type="text" className="form-control" placeholder="" aria-label="Last name" />
 				</div>
             </div>
             <div className='mb-3'>

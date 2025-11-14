@@ -10,13 +10,15 @@ const result = require("../utils/result");
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, mobile, birth, password } = req.body;
+  const { firstName, lastName, email, mobileNo, dob, password } = req.body;
+
   const sql = `INSERT INTO users(firstName,lastName,email,mobile,birth,password) VALUES(?,?,?,?,?,?)`;
   try {
     const hashpassword = await bcrypt.hash(password, config.saltRounds);
     pool.query(
       sql,
-      [firstName, lastName, email, mobile, birth, hashpassword],
+      [firstName, lastName, email, mobileNo, dob, hashpassword],
+
       (error, data) => {
         res.send(result.createResult(error, data));
       }
@@ -36,7 +38,7 @@ router.post("/signin", (req, res) => {
       if (userValid) {
         // body part inside the jwt that needs to be encrypted
         const payload = {
-          user_id: dbUser.user_id,
+          uid: dbUser.uid,
         };
         // create the jwt token
         const token = jwt.sign(payload, config.secret);
@@ -51,57 +53,12 @@ router.post("/signin", (req, res) => {
   });
 });
 
-router.get("/profile", (req, res) => {
-  const sql = `SELECT firstName, lastName, email,mobile,birth FROM users WHERE user_id = ?`;
-  pool.query(sql, [req.headers.user_Id], (error, data) => {
-    res.send(result.createResult(error, data));
-  });
-});
-
-router.put("/update", (req, res) => {
-  const { firstName, lastName, email, mobile, birth } = req.body;
-  const sql = `UPDATE users SET firstName=?, lastName=?, email=?,mobile=?,birth=? WHERE user_id = ?`;
-  pool.query(
-    sql,
-    [firstName, lastName, email, mobile, birth, req.user_id],
-    (error, data) => {
-      res.send(result.createResult(error, data));
-    }
+router.delete("/", (req, res) => {
+  const uid = req.uid;
+  const sql = `DELETE FROM users WHERE user_id = ?`;
+  pool.query(sql, [uid], (error, data) =>
+    res.send(result.createResult(error, data))
   );
-});
-
-router.put("/updatepassword", async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-
-  try {
-    // 1. Get current password from DB
-    const sql = `SELECT password FROM users WHERE user_id = ?`;
-    pool.query(sql, [req.user_id], async (error, data) => {
-      if (error) return res.send(result.createResult(error));
-
-      if (data.length === 0)
-        return res.send(result.createResult("User not found"));
-
-      const dbUser = data[0];
-
-      // 2. Compare old password
-      const isValid = await bcrypt.compare(oldPassword, dbUser.password);
-
-      if (!isValid)
-        return res.send(result.createResult("Incorrect Old Password"));
-
-      // 3. Hash new password
-      const hashed = await bcrypt.hash(newPassword, config.saltRounds);
-
-      // 4. Update DB
-      const updateSql = `UPDATE users SET password=? WHERE user_id=?`;
-      pool.query(updateSql, [hashed, req.user_id], (err, updateResult) => {
-        return res.send(result.createResult(err, updateResult));
-      });
-    });
-  } catch (error) {
-    res.send(result.createResult(error));
-  }
 });
 
 module.exports = router;
